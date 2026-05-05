@@ -1,6 +1,10 @@
 [
     {
-        "name": "Nauczyć się gita i jsona!",
-        "done": false
+        "task": "check tasks.json file",
+        "isDone": false
+    },
+    {
+        "task": "make sure tasks.json has consistent key names",
+        "isDone": false
     }
 ]
