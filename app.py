@@ -51,16 +51,14 @@ def show_tasks(loaded_tasks):
         return
 
     print("\n-----------START-----------")
-    x = 0
     for index, task in enumerate(loaded_tasks, start=1):
         
-        if loaded_tasks[x]["isDone"] is False:
+        if loaded_tasks[index - 1]["isDone"] is False:
             status = "Pending"
         else:
             status = "Done"
 
-        print(f"{index}. {loaded_tasks[x]['task']} ----> {status}")
-        x += 1
+        print(f"{index}. {loaded_tasks[index - 1]['task']} ----> {status}") 
     print("-----------END-----------\n")
 
 # appending new tasks at the bottom
@@ -78,7 +76,7 @@ def save_task_file(file):
 # marking task as completed
 def complete_task(loaded_tasks):
 
-    if load_tasks_list == []:
+    if loaded_tasks == []:
         print("Woho! Nothing to be done for now...")
 
     
@@ -94,9 +92,7 @@ def complete_task(loaded_tasks):
         else:    
             loaded_tasks[ index_for_completion -1 ]["isDone"] = True
             print(f"\nCongrats on finishing the task ({loaded_tasks[index_for_completion -1]["task"]})\n")
-
-            with open(FILE_NAME, "w", encoding="utf8") as f:
-                save_task_file(loaded_tasks)
+            save_task_file(loaded_tasks)
     
     except ValueError:
         print("\nIncorrect type, type integer\n")

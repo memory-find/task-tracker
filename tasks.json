@@ -22,5 +22,13 @@
     {
         "task": "Sleep well",
         "isDone": true
+    },
+    {
+        "task": "sharing results witm chat!",
+        "isDone": true
+    },
+    {
+        "task": "checking wheter everything still works fine",
+        "isDone": true
     }
 ]
