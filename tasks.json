@@ -1,10 +1,26 @@
 [
     {
         "task": "check tasks.json file",
-        "isDone": false
+        "isDone": true
     },
     {
         "task": "make sure tasks.json has consistent key names",
-        "isDone": false
+        "isDone": true
+    },
+    {
+        "task": "confirm that you will share the output from the app run",
+        "isDone": true
+    },
+    {
+        "task": "Washing dishes",
+        "isDone": true
+    },
+    {
+        "task": "greet Ola :3",
+        "isDone": true
+    },
+    {
+        "task": "Sleep well",
+        "isDone": true
     }
 ]
