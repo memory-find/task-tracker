@@ -1,6 +1,6 @@
 # Task Tracker
 
-Simple CLI task tracker written in Python.
+Simple CLI task tracker written in Python for learning Git and GitHub.
 
 ## Features
 - List tasks
