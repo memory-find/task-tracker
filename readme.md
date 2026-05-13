@@ -1,6 +1,9 @@
 # Task Tracker
 
-Simple CLI task tracker written in Python. - conflict a
+
+Simple CLI task tracker written in Python. - conflict a and conflict-b assembled!
+
+
 
 ## Features
 - List tasks
