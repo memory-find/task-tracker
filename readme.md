@@ -1,6 +1,6 @@
 # Task Tracker
 
-Simple CLI task tracker written in Python for practicing version control.
+Simple CLI task tracker written in Python. - conflict a
 
 ## Features
 - List tasks
