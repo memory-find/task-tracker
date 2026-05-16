@@ -89,6 +89,7 @@ def remove_task(loaded_tasks):
     
     if loaded_tasks == []:
         print("Since list is empty, there is no task to be removed!\n")
+        return
 
     show_tasks(loaded_tasks)
 
@@ -114,6 +115,7 @@ def complete_task(loaded_tasks):
 
     if loaded_tasks == []:
         print("Woho! Nothing to be done for now...")
+        return
 
     
     show_tasks(loaded_tasks)
