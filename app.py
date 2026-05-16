@@ -7,7 +7,7 @@ FILE_NAME = "tasks.json"
 
 def menu():
     while True:
-        decision = input("choose one of options:\n 1. List tasks\n 2. Add new task\n 3. Complete task\n 4. Close")
+        decision = input("choose one of options:\n 1. List tasks\n 2. Add new task\n 3. Complete task\n 4. Remove task.\n 5. Close")
         loaded_tasks = load_tasks_list()
 
 
@@ -24,8 +24,12 @@ def menu():
         elif decision == "3":
             complete_task(loaded_tasks)
 
-
+        
         elif decision == "4":
+            remove_task(loaded_tasks)
+
+
+        elif decision == "5":
             sys.exit()
 
 
@@ -43,7 +47,9 @@ def load_tasks_list():
 
     with open(FILE_NAME, "r", encoding="utf-8") as f:
         return json.load(f)
-    
+
+
+
 # showing tasks in order
 def show_tasks(loaded_tasks):
     if loaded_tasks == []:
@@ -61,11 +67,15 @@ def show_tasks(loaded_tasks):
         print(f"{index}. {loaded_tasks[index - 1]['task']} ----> {status}") 
     print("-----------END-----------\n")
 
+
+
 # appending new tasks at the bottom
 def write_tasks(file_from_load_tsk, new_task):
     file_from_load_tsk.append({"task": new_task, "isDone": False})
     save_task_file(file_from_load_tsk)
     print(f"task added: {new_task}")
+
+
 
 # saving the file
 def save_task_file(file):
@@ -73,11 +83,39 @@ def save_task_file(file):
         json.dump(file, f, indent=4, ensure_ascii=False)
 
 
+
+# removing given tasks
+def remove_task(loaded_tasks):
+    
+    if loaded_tasks == []:
+        print("Since list is empty, there is no task to be removed!\n")
+        return
+
+    show_tasks(loaded_tasks)
+
+    try:
+        index_for_removal = int(input("Which task would you like to remove from the list?"))
+
+        if index_for_removal <= 0 or index_for_removal > len(loaded_tasks):
+            print(f"\nMake sure that integer chosen is bigger than 0 and it fits in current amount of tasks {len(loaded_tasks)}\n")
+
+        else:
+            print(f"task '{loaded_tasks[index_for_removal -1]["task"]}' has been succesfully removed from the list\n")
+            loaded_tasks.remove(loaded_tasks[index_for_removal -1])
+            save_task_file(loaded_tasks)
+
+
+    except ValueError:
+        print("\nIncorrect type, type an integer\n")
+
+
+
 # marking task as completed
 def complete_task(loaded_tasks):
 
     if loaded_tasks == []:
         print("Woho! Nothing to be done for now...")
+        return
 
     
     show_tasks(loaded_tasks)
