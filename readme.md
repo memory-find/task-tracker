@@ -11,6 +11,7 @@ Simple CLI task tracker written in Python. version 2.0 - 17.05.2026
 - Add new task
 - Complete task
 - Remove task
+- Edit task descrpiton
 
 ## Fixes history
 - 16.05
@@ -18,6 +19,8 @@ Simple CLI task tracker written in Python. version 2.0 - 17.05.2026
 - 17.05
     * Version 2.0 introduces new status key, with three possible values: to-do, in-progress and done. Version maintains compatibility with previous version, providing service for legacy isDone key. 
     * New functionality of filtering tasks by status (to-do, in-progress, done)
+- 18.05
+    * Version 3.0 indtoduces functionality of editing satus for the existing task.
 
 ## Run
 ```bash
