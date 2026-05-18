@@ -7,7 +7,7 @@ FILE_NAME = "tasks.json"
 
 def menu():
     while True:
-        decision = input("choose one of options:\n 1. List tasks\n 2. Filter tasks by status\n 3. Add new task\n 4. Change status\n 5. Remove task.\n 6. Close")
+        decision = input("choose one of options:\n 1. List tasks\n 2. Filter tasks by status\n 3. Add new task\n 4. Change status\n 5. Remove task.\n 6. Edit task descrpiton\n 7. Close")
         loaded_tasks = load_tasks_list()
 
 
@@ -31,8 +31,11 @@ def menu():
         elif decision == "5":
             remove_task(loaded_tasks)
 
-
         elif decision == "6":
+            edit_task_description(loaded_tasks)
+
+
+        elif decision == "7":
             sys.exit()
 
 
@@ -215,6 +218,42 @@ def set_the_status_local(loaded_tasks, index_for_completion, status_to_be_set):
         loaded_tasks[ index_for_completion -1 ]["status"] = status_to_be_set
         print(f"\nStatus set as '{status_to_be_set}' for: ({loaded_tasks[index_for_completion -1]["task"]})\n")
         save_task_file(loaded_tasks)
+
+
+# edit description for the already added task
+def edit_task_description(loaded_tasks):
+    
+    if loaded_tasks == []:
+        print("Since list is empty, there is no task where we can change the status!\n")
+        return
+
+    show_tasks(loaded_tasks)
+
+
+    try:
+        index_for_changing_status = int(input("On which task would you like to change description?"))
+
+        if index_for_changing_status <= 0 or index_for_changing_status > len(loaded_tasks):
+            print(f"\nMake sure that integer chosen is bigger than 0 and it fits in current amount of tasks: {len(loaded_tasks)}\n")
+        
+        else:
+            while True:
+                new_description = input(f"Type your new description for task: {loaded_tasks[index_for_changing_status -1]["task"]}")
+                
+                if new_description.strip() == "":
+                    print("You cannot leave empty space as description\n")
+                
+                else:
+                    loaded_tasks[index_for_changing_status -1]["task"] = new_description
+                    save_task_file(loaded_tasks)
+                    print("Description has been changed!")
+                    break
+
+    except ValueError:
+        print("\nIncorrect type, type integer\n")
+
+
+
 
 if __name__ == "__main__":
     menu()
