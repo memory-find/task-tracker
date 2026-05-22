@@ -12,6 +12,7 @@ Simple CLI task tracker written in Python. version 2.0 - 17.05.2026
 - Complete task
 - Remove task
 - Edit task descrpiton
+- Legacy data types migration
 
 ## Fixes history
 - 16.05
@@ -21,6 +22,8 @@ Simple CLI task tracker written in Python. version 2.0 - 17.05.2026
     * New functionality of filtering tasks by status (to-do, in-progress, done)
 - 18.05
     * Version 3.0 indtoduces functionality of editing satus for the existing task.
+-22.05
+    * Version 4.0 introduces data migration and simplifies function logic so they expect data to be in unified format
 
 ## Run
 ```bash
