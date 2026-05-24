@@ -1,6 +1,7 @@
 import os
 import json
 import sys
+import datetime
 
 #specify a file name
 FILE_NAME = "tasks.json"
@@ -11,7 +12,7 @@ def menu():
     save_task_file(loaded_tasks_after_conversion)
 
     while True:
-        decision = input("choose one of options:\n 1. List tasks\n 2. Filter tasks by status or priority\n 3. Add new task\n 4. Change status\n 5. Remove task.\n 6. Edit task descrpiton\n 7. Change priority\n 8. Close")
+        decision = input("choose one of options:\n 1. List tasks\n 2. Filter tasks by status or priority\n 3. Add new task\n 4. Change status\n 5. Remove task.\n 6. Edit task descrpiton\n 7. Change priority\n 8. Set due to date\n 9. Close")
         loaded_tasks = load_tasks_list()
 
 
@@ -20,7 +21,7 @@ def menu():
 
         
         elif decision == "2":
-            filter_tasks_by_status_or_prio(loaded_tasks)
+            filter_tasks_by_status_or_prio_dueDate(loaded_tasks)
            
 
         elif decision == "3":
@@ -44,6 +45,10 @@ def menu():
 
 
         elif decision == "8":
+            due_date_set(loaded_tasks)
+
+
+        elif decision == "9":
             sys.exit()
 
 
@@ -53,6 +58,7 @@ def menu():
 
 # data migration function to be run once before menu loop is initiated, while initiated, isDone key is being replaced by status
 # legacy tasks without priority will have medium priority assigned by default
+# legacy tasks will have dueDate to 'not-set' by default
 def data_migration(loaded_tasks):
     
     for record in loaded_tasks:
@@ -69,6 +75,11 @@ def data_migration(loaded_tasks):
         if record.get('priority') is None:
             record['priority'] = "medium"
 
+        if record.get('dueDate') is None:
+            record['dueDate'] = "not-set"
+        
+        
+
     return loaded_tasks
 
 
@@ -83,13 +94,13 @@ def load_tasks_list():
 
 # introducing new feature for listing tasks by its status
 # function can serve also legacy capitalized 'Done' status
-def filter_tasks_by_status_or_prio(loaded_tasks):
+def filter_tasks_by_status_or_prio_dueDate(loaded_tasks):
     
     try:
     
-        status_or_prio = int(input("\nWhich filtering mechanism would you like to apply?: \n1. Status\n2. Priority"))    
+        status_or_prio_dueDate = int(input("\nWhich filtering mechanism would you like to apply?: \n1. Status\n2. Priority\n3. Due Date"))    
 
-        if status_or_prio == 1:
+        if status_or_prio_dueDate == 1:
 
             try:
                     decision_status = int(input("\nWhich status would you like to filter: \n1. To-do\n2. In-progress\n3. Done"))
@@ -112,7 +123,7 @@ def filter_tasks_by_status_or_prio(loaded_tasks):
                 print("\nIncorrect type, type an integer\n")
 
 
-        elif status_or_prio == 2:
+        elif status_or_prio_dueDate == 2:
             
             try:
                     decision_prio = int(input("\nWhich priority would you like to filter: \n1. low\n2. medium\n3. high"))
@@ -133,6 +144,9 @@ def filter_tasks_by_status_or_prio(loaded_tasks):
                     
             except ValueError:
                 print("\nIncorrect type, type an integer\n")
+
+        elif status_or_prio_dueDate == 3:
+            filter_by_due_date(loaded_tasks)
 
         else:
             print("\n-----------START-----------")
@@ -163,6 +177,52 @@ def filter_tasks_by_priority_local(loaded_tasks, task_priority):
             print(f"{index}. {(task['task']).capitalize()} | status: {task['status']} | priority: {task['priority']}")
     print("-----------END-----------\n")
 
+#function for filtering tasks by due date
+def filter_by_due_date(loaded_tasks):
+    loaded_tasks_local_copy = [{"task": line['task'],'status': line['status'], "dueDate": line['dueDate']} for line in loaded_tasks]
+    
+
+    task_with_dates = []
+    task_with_dates_overdue = []
+    task_with_date_not_set = []
+    today = datetime.date.today()
+
+    for index, task in enumerate(loaded_tasks_local_copy, start=1):
+
+        if task['dueDate'] != "not-set":
+            year, month, day = [int(x) for x in task['dueDate'].split('-')]
+            task['dueDate'] = datetime.date(year, month, day)
+
+            if task['dueDate'] < today:
+                if task['status'].lower() != 'done':
+                    task_with_dates_overdue.append(task)
+            
+            else:
+                if task['status'].lower() != 'done':
+                    task_with_dates.append(task)
+        
+        else:
+            task_with_date_not_set.append(task)
+
+    if task_with_dates_overdue != []:
+        print("\nTHESE TASKS ARE OVERDUE!\n")
+
+        for line in sorted(task_with_dates_overdue, key=lambda x: x['dueDate']):
+            print(f"{(line['task']).capitalize()} | status: {line['status']} | dueDate: {line['dueDate']}")
+
+
+    if task_with_dates != []:
+        print("\nTASKS WITH DATES SET\n")
+
+        for line in sorted(task_with_dates, key=lambda x: x['dueDate']):
+            print(f"{(line['task']).capitalize()} | status: {line['status']} | dueDate: {line['dueDate']}")
+
+    if task_with_date_not_set != []:
+        print("\nTASKS WITHOUT DATES\n")
+        
+        for line in task_with_date_not_set:
+            print(f"{(line['task']).capitalize()} | status: {line['status']} | dueDate: {line['dueDate']}")
+
 
 # showing tasks in order
 # removing pending - done segmentation, listing compatible with "status" instead
@@ -175,7 +235,7 @@ def show_tasks(loaded_tasks):
         print("\n-----------START-----------")
         for index, task in enumerate(loaded_tasks, start=1):
 
-            print(f"{index}. {(task['task']).capitalize()} | status: {task['status']} | priority: {task['priority']}")
+            print(f"{index}. {(task['task']).capitalize()} | status: {task['status']} | priority: {task['priority']} | dueDate: {task['dueDate']}")
 
         print("-----------END-----------\n")
 
@@ -184,7 +244,7 @@ def show_tasks(loaded_tasks):
 # instead isDone, changing the key naming to 'status' and by default setting it to to_do 
 # priority feature implementation, new tasks by default will land with new key: 'priority' and it will be set to medium
 def write_tasks(file_from_load_tsk, new_task):
-    file_from_load_tsk.append({"task": new_task, "status": "to-do", "priority": "medium"})
+    file_from_load_tsk.append({"task": new_task, "status": "to-do", "priority": "medium", "dueDate": "not-set"})
     save_task_file(file_from_load_tsk)
     print(f"task added: {new_task}")
 
@@ -358,6 +418,48 @@ def set_the_prio_local(loaded_tasks, index_for_prio, prio_to_be_set):
     print(f"\nPriority set as '{prio_to_be_set}' for: ({loaded_tasks[index_for_prio -1]["task"]})\n")
     save_task_file(loaded_tasks)
         
+
+# setting dueDate to existing records
+def due_date_set(loaded_tasks):
+    
+    if loaded_tasks == []:
+        print("Woho! Nothing to set due date for...")
+        return
+
+    
+    show_tasks(loaded_tasks)
+
+    try: 
+        index_for_dueDate = int(input("Choose task for changing due date"))
+        
+        if index_for_dueDate <= 0 or index_for_dueDate > len(loaded_tasks):
+            print(f"\nMake sure that integer chosen is bigger than 0 and it fits in current amount of tasks: {len(loaded_tasks)}\n")
+
+        else:
+            today = datetime.date.today()
+
+            while True:
+                try:
+                    year, month, day = [int(x) for x in input("Type due date in <year-month-day> format").split('-')]
+                    chosen_dueDate = datetime.date(year, month, day)
+
+
+                    if chosen_dueDate < today:
+                        print(f"\nYou cannot set dueDate older than today: ({today})")
+
+
+                    else:
+                        loaded_tasks[index_for_dueDate -1]['dueDate'] = chosen_dueDate.strftime(('%Y-%m-%d'))
+                        save_task_file(loaded_tasks)
+                        break
+
+
+                except ValueError:
+                    print("\nMake sure to type date in correct format '<year-month-day>'\n")
+
+
+    except ValueError:
+        print("\nIncorrect type, type integer\n")
 
 
 if __name__ == "__main__":
