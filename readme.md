@@ -13,6 +13,7 @@ Simple CLI task tracker written in Python. version 2.0 - 17.05.2026
 - Remove task
 - Edit task descrpiton
 - Legacy data types migration
+- Sorting by due-date
 
 ## Fixes history
 - 16.05
@@ -24,6 +25,8 @@ Simple CLI task tracker written in Python. version 2.0 - 17.05.2026
     * Version 3.0 indtoduces functionality of editing satus for the existing task.
 -22.05
     * Version 4.0 introduces data migration and simplifies function logic so they expect data to be in unified format
+-23.05
+    * Version 5.0 introduces functionality of adding due-date to tasks, and filtering by due date
 
 ## Run
 ```bash
